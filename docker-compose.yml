@@ -5,7 +5,7 @@ services:
         container_name: inert-bot
         hostname: inert-bot
         build:
-            context: ./discord-bot
+            context: ./discord_bot
         image: blots/inert-bot
         env_file: 
             - .env
