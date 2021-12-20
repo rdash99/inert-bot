@@ -17,6 +17,7 @@ class PollCatagory(AnonPoll, Poll, name=__name__[9:]):
         AnonPoll.__init__(self, client)
         Poll.__init__(self, client)
 
+
 def setup(client):
     log.debug(f'loading {__name__}')
     client.add_cog(PollCatagory(client))

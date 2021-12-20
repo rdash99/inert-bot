@@ -7,17 +7,18 @@ import discord
 from PIL import Image, ImageColor
 from discord.ext import commands
 
-import cppimport.import_hook
+import cppimport.import_hook  # noqa: F401
 from .cpp_functions import recolor
 
 log = logging.getLogger(__name__)
+
 
 class Recolor(commands.Cog):
     def __init__(self, client):
         self.client = client
 
     @staticmethod
-    async def FindImage(ctx: object) -> bytes or None:
+    async def FindImage(ctx: commands.Context) -> bytes or None:
         """finds a discord image
         :param ctx:
         :return:
@@ -33,11 +34,11 @@ class Recolor(commands.Cog):
                 file_url = msg.attachments[0].url if msg.attachments else ''
 
                 message_url = reg.search(msg.content)
-                message_url = message_url.group(0) if message_url else ''
+                message_url_string = message_url.group(0) if message_url else ''
 
-                # print(file_url, message_url)
-                if reg.match(file_url) or message_url:  # self.reg to check for images in links
-                    url = file_url if file_url else message_url
+                # print(file_url, message_url_string)
+                if reg.match(file_url) or message_url_string:  # self.reg to check for images in links
+                    url = file_url if file_url else message_url_string
                     # found attachment with image file format
                     async with aiohttp.ClientSession() as session:
                         async with session.get(url) as response:
@@ -79,7 +80,7 @@ class Recolor(commands.Cog):
         return img
 
     @commands.command(aliases=['rc', 'recolour'])
-    async def recolor(self, ctx: object, color: str = 'yellow', strength: float = 50):
+    async def recolor(self, ctx: commands.Context, color: str, strength: float = 50):
         """
         Recolors above image
         :param ctx:
@@ -138,7 +139,7 @@ class Recolor(commands.Cog):
         await bot_msg.delete()
 
     @recolor.error
-    async def _recolor(self, ctx: object, error: object):
+    async def _recolor(self, ctx: commands.Context, error: object):
         """
         Error output for Recolor
         :param ctx:

@@ -17,7 +17,7 @@ except ImportError:
     logging.debug("python-dotenv not loaded. Hope you set your environment variables.")
 
 DEBUG: bool = bool(os.getenv("DEBUG", False))
-TOKEN: str = os.getenv("TOKEN")
+TOKEN = os.getenv("TOKEN")
 
 # Debug Mode Setup
 __format = "[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s"
@@ -48,8 +48,6 @@ else:
     logging.getLogger("discord").setLevel(logging.ERROR)
     logging.getLogger("apscheduler.scheduler:Scheduler").setLevel(logging.ERROR)
     logging.getLogger("cppimport.import_hook").setLevel(logging.ERROR)
-
-
 
 # Check for token and exit if not exists
 if TOKEN is None:

@@ -4,10 +4,10 @@ from discord.ext import commands
 
 log = logging.getLogger()
 
+
 class Pfp(commands.Cog):
     def __init__(self, client):
         self.client = client
-
 
     @commands.command(aliases=['avatar'])
     async def pfp(self, ctx, *, member: discord.Member = None):

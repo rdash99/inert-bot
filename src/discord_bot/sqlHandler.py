@@ -12,6 +12,7 @@ c = conn.cursor()
 
 log = logging.getLogger(__name__)
 
+
 def init_db() -> None:
     """
     Sets up the database with correct tables using information from schema

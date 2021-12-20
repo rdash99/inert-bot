@@ -9,6 +9,7 @@ from sql.polls import SqlClass
 
 log = logging.getLogger(__name__)
 
+
 class AnonPoll(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -22,7 +23,6 @@ class AnonPoll(commands.Cog):
         self.sched = AsyncIOScheduler()
         client.loop.create_task(self._async_init())
         self.sched.start()
-
 
     async def _async_init(self) -> None:
         """Queues up all in progress polls
@@ -103,7 +103,8 @@ class AnonPoll(commands.Cog):
         :param payload: info about the user who voted
         :return:
         """
-        if payload.member == self.client.user: return
+        if payload.member == self.client.user:
+            return
 
         if self.sql.get_poll(payload.message_id, payload.channel_id, payload.guild_id):
             if self.sql.check_vote(payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id):
@@ -177,11 +178,14 @@ class AnonPoll(commands.Cog):
 
         # filtering out
         if len(args) > 20:
-            return await ctx.send(f"bad {ctx.author.name}! thats too much polling >:(")
+            await ctx.send(f"bad {ctx.author.name}! thats too much polling >:(")
+            return
         elif len(args) == 0:
-            return await ctx.send(f"bad {ctx.author.name}! thats too little polling >:(")
+            await ctx.send(f"bad {ctx.author.name}! thats too little polling >:(")
+            return
         elif name == '' or '' in args:
-            return await ctx.send(f"bad {ctx.author.name}! thats too simplistic polling >:(")
+            await ctx.send(f"bad {ctx.author.name}! thats too simplistic polling >:(")
+            return
 
         # creating embed for poll
         # main body

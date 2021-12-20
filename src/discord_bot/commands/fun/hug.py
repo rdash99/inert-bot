@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 log = logging.getLogger(__name__)
 
+
 class Hug(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -21,7 +22,7 @@ class Hug(commands.Cog):
                     "https://imgur.com/ng81k8S", "https://imgur.com/4bGa09O"]
 
         if target is None:
-            await ctx.send(f"*hugs back*")
+            await ctx.send("*hugs back*")
         elif target == ctx.author:
             await ctx.send("https://imgur.com/xTJdcbg")
         else:
@@ -31,4 +32,3 @@ class Hug(commands.Cog):
 
             await ctx.send(f"A hug from {author_name}!")
             await ctx.send(f"{hug_result}")
-

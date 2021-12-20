@@ -46,7 +46,6 @@ class Role(commands.Cog):
 
         self.sql.remove_roles(guild_id, lst)
 
-
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def addroles(self, ctx, member: discord.Member):

@@ -21,6 +21,7 @@ class MiscCatagory(Pfp, Recolor, Ping, Help, name=__name__[9:]):
         Ping.__init__(self, client)
         Help.__init__(self, client)
 
+
 def setup(client):
     log.debug(f'loading {__name__}')
     client.add_cog(MiscCatagory(client))
@@ -28,4 +29,3 @@ def setup(client):
 
 def teardown(client):
     log.debug(f'{__name__} unloaded')
-

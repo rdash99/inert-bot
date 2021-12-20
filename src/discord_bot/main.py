@@ -10,8 +10,11 @@ log = logging.getLogger(__name__)
 
 # Creating client
 sql = SqlClass()
+
+
 def get_prefix(client, message):
     return sql.get_prefix(message.guild.id)[0][0]
+
 
 # add discord bot perms
 intents = Intents.default()

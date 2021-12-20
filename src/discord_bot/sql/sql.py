@@ -1,8 +1,8 @@
 import logging
+import sqlite3
 log = logging.getLogger(__name__)
 
 log.info("Using sqlite3")
-import sqlite3
 
 
 class SqlBaseCommands:
