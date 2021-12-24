@@ -35,23 +35,17 @@ for folders in os.listdir('./commands'):
 # prints when bot has started up
 @client.event
 async def on_ready():
-    guilds = client.guilds
-    guilds = [guild.id for guild in guilds]
+    guilds = [guild.id for guild in client.guilds]
 
-    db_guilds = sql.get_guilds()
-    db_guilds = [db_guilds[0] for db_guilds in db_guilds]
+    db_guilds = [db_guilds[0] for db_guilds in sql.get_guilds()]
 
-    lst = []
-    for guild in guilds:
-        if guild not in db_guilds:
-            lst.append(guild)
+    # Every guild that isn't in the database
+    lst = [g for g in guilds if g not in db_guilds]
 
     sql.add_guilds(lst, ".")
 
-    lst = []
-    for db_guild in db_guilds:
-        if db_guild not in guilds:
-            lst.append(db_guild)
+    # Every guild that the bot has been removed from
+    lst = [db_g for db_g in db_guilds if db_g not in guilds]
 
     sql.remove_guilds(lst)
     log.info("bot ready")

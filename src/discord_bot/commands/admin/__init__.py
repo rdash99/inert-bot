@@ -3,12 +3,13 @@ import logging
 # Importing subcommands
 from .setprefix import SetPrefix
 from .role import Role
-from .moderation import Moderation
+from .kick import Kick
+from .ban import Ban
 
 log = logging.getLogger(__name__)
 
 
-class AdminCatagory(SetPrefix, Role, Moderation, name=__name__[9:]):
+class AdminCatagory(SetPrefix, Role, Kick, Ban, name=__name__[9:]):
     """
     Administation commands
     """
@@ -17,7 +18,8 @@ class AdminCatagory(SetPrefix, Role, Moderation, name=__name__[9:]):
         self.client = client
         SetPrefix.__init__(self, client)
         Role.__init__(self, client)
-        Moderation.__init__(self, client)
+        Kick.__init__(self, client)
+        Ban.__init__(self, client)
 
 
 def setup(client):
