@@ -7,7 +7,7 @@ from .poll import Poll
 log = logging.getLogger(__name__)
 
 
-class PollCatagory(AnonPoll, Poll, name=__name__[9:]):
+class PollCategory(AnonPoll, Poll, name=__name__[9:]):
     """
     Polling commands
     """
@@ -19,7 +19,7 @@ class PollCatagory(AnonPoll, Poll, name=__name__[9:]):
 
 def setup(client):
     log.debug(f'loading {__name__}')
-    client.add_cog(PollCatagory(client))
+    client.add_cog(PollCategory(client))
 
 
 def teardown(client):

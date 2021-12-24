@@ -6,6 +6,7 @@ import re
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext import commands
 from sql.polls import SqlClass
+from string import ascii_lowercase
 
 log = logging.getLogger(__name__)
 

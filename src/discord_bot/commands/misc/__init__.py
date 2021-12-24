@@ -9,7 +9,7 @@ from .help import Help
 log = logging.getLogger(__name__)
 
 
-class MiscCatagory(Pfp, Recolor, Ping, Help, name=__name__[9:]):
+class MiscCategory(Pfp, Recolor, Ping, Help, name=__name__[9:]):
     """
     Misc commands
     """
@@ -23,7 +23,7 @@ class MiscCatagory(Pfp, Recolor, Ping, Help, name=__name__[9:]):
 
 def setup(client):
     log.debug(f'loading {__name__}')
-    client.add_cog(MiscCatagory(client))
+    client.add_cog(MiscCategory(client))
 
 
 def teardown(client):
