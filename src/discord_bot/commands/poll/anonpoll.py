@@ -5,7 +5,8 @@ import discord
 import re
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext import commands
-from sql.polls import SqlClass
+# from sql.polls import SqlClass
+from discord_bot.sqlHandler import (select, execute)
 
 log = logging.getLogger(__name__)
 
@@ -205,8 +206,21 @@ class AnonPoll(commands.Cog):
 
         # SQL Setup
         log.debug('Uploading poll data to database')
-        self.sql.add_poll(msg.id, msg.channel.id, msg.author.guild.id, name, time)
-        self.sql.add_options(msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns, args)
+        # self.sql.add_poll(msg.id, msg.channel.id, msg.author.guild.id, name, time)
+        execute(
+            """INSERT INTO polls (`message_id`, `channel_id`, `guild_id`, `name`, `time`) 
+            VALUES (?,?,?,?,?)""",
+            msg.id, msg.channel.id, msg.author.guild.id, name, time
+        )
+        # self.sql.add_options(msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns, args)
+        for n, arg in enumerate(args):
+            execute(
+                """INSERT INTO options 
+                (`message_id`, `channel_id`, `guild_id`, `emote_id`, `name`) 
+                VALUES (?,?,?,?,?)""",
+                msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns[n], arg
+            )
+        
         # Background task
         if time:
             self.sched.add_job(self._end_poll, "date", run_date=time,

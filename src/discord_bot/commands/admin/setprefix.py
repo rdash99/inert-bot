@@ -1,5 +1,5 @@
 from discord.ext import commands
-from sql.prefix import SqlClass
+# from sql.prefix import SqlClass
 
 
 class SetPrefix(commands.Cog):

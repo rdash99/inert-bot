@@ -2,18 +2,21 @@ import logging
 import os
 from discord import Intents
 from discord.ext import commands
-from sql.prefix import SqlClass
 
-from settings import (TOKEN, DEBUG)
+# from sql.prefix import SqlClass
+from discord_bot.sqlHandler import (init_db, select, execute)
+from discord_bot.settings import (TOKEN, DEBUG)
 
 log = logging.getLogger(__name__)
 
 # Creating client
-sql = SqlClass()
+init_db()
+# sql = SqlClass()
 
 
 def get_prefix(client, message):
-    return sql.get_prefix(message.guild.id)[0][0]
+    return select("select prefix from guilds where guild_id = ?", message.guild.id)[0][0]
+    # return sql.get_prefix(message.guild.id)[0][0]
 
 
 # add discord bot perms
@@ -41,33 +44,37 @@ async def on_ready():
     guilds = client.guilds
     guilds = [guild.id for guild in guilds]
 
-    db_guilds = sql.get_guilds()
+    # db_guilds = sql.get_guilds()
+    db_guilds = select("SELECT guild_id FROM guilds")
     db_guilds = [db_guilds[0] for db_guilds in db_guilds]
 
-    lst = []
+    # lst = []
     for guild in guilds:
         if guild not in db_guilds:
-            lst.append(guild)
+            execute("insert into guilds (`guild_id`, `prefix`) values (?,?)", guild, DEFAULT_PREFIX)
 
-    sql.add_guilds(lst, ".")
+    # sql.add_guilds(lst, ".")
 
-    lst = []
+    # lst = []
     for db_guild in db_guilds:
         if db_guild not in guilds:
-            lst.append(db_guild)
+            # lst.append(db_guild)
+            execute("delete from guilds where guild_id=?", db_guild)
 
-    sql.remove_guilds(lst)
+    # sql.remove_guilds(lst)
     log.info("bot ready")
 
 
 @client.event
 async def on_guild_join(guild):
-    sql.add_guild(guild.id, ".")
+    # sql.add_guild(guild.id, ".")
+    execute("insert into guilds (`guild_id`, `prefix`) values (?,?)", guild.id, DEFAULT_PREFIX)
 
 
 @client.event
 async def on_guild_remove(guild):
-    sql.remove_guild(guild.id)
+    # sql.remove_guild(guild.id)
+    execute("delete from guilds where guild_id=?", guild.id)
 
 
 @client.before_invoke

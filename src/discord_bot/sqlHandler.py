@@ -4,7 +4,7 @@ This includes all the functions required for handling all database related funct
 import sqlite3
 import logging
 import os
-from settings import (DATABASE_URI)
+from discord_bot.settings import (DATABASE_URI)
 
 conn = sqlite3.connect(DATABASE_URI)
 conn.row_factory = sqlite3.Row
@@ -26,7 +26,7 @@ def init_db() -> None:
 
 
 # TODO: This can probably be imporved but it works
-def select(sql: str, params: tuple = ()) -> list:
+def select(sql: str, *params) -> list:
     """
     Selects information from a database
     """
@@ -34,7 +34,7 @@ def select(sql: str, params: tuple = ()) -> list:
     return c.fetchall()
 
 
-def execute(sql: str, params: tuple) -> None:
+def execute(sql: str, *params) -> None:
     """
     Executes an sql statement and catches integraty errors
     """
