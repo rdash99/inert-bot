@@ -7,27 +7,30 @@ import os
 import  mysql.connector
 from mysql.connector import Error
 # Discord settings
-from discord_bot.settings import (SQL_HOST, SQL_USERNAME, SQL_PASSWORD)
+from discord_bot.settings import (SQL_HOST, SQL_USERNAME, SQL_PASSWORD, SQL_PORT, SQL_DATABASE)
 log = logging.getLogger(__name__)
 
 # Connecting to database
-connection = None
+conn = None
 
 try:
     conn = mysql.connector.connect(
-        host=SQL_HOST,
         user=SQL_USERNAME,
-        passwd=SQL_PASSWORD
+        password=SQL_PASSWORD,
+        host=SQL_HOST,
+        port=SQL_PORT,
+        database=SQL_DATABASE
     )
 
     log.info("Connection to MySQL DB successful")
 except Error as e:
     log.error("Unable to connect to sql")
     log.exception(e)
-    exit(-1)
+    exit(1)
 
 # Initalize cursor
 c = conn.cursor()
+
 
 def sqlLogging(func):
     """
@@ -40,6 +43,7 @@ def sqlLogging(func):
 
 def init_db() -> None:
     """
+    # TODO: update this code to work with new database driver
     Sets up the database with correct tables using information from schema
     """
     for filename in os.listdir("./migrations"):
@@ -70,3 +74,9 @@ def execute(sql: str, *params) -> None:
     except Exception as e:
         conn.rollback()
         log.exception(e)
+
+if __name__=="__main__":
+    execute("INSERT INTO guilds (guild_id) VALUES (?)", 123)
+    data = select("SELECT * FROM guilds")
+    print(data)
+    #init_db()

@@ -16,9 +16,16 @@ try:
 except ImportError:
     logging.debug("python-dotenv not loaded. Hope you set your environment variables.")
 
+# Debugging
 DEBUG: bool = bool(os.getenv("DEBUG", False))
+# Discord
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-DATABASE_URI = os.getenv("DATABASE_URI")
+# SQL
+SQL_HOST: str = os.getenv("SQL_HOST", "localhost")
+SQL_PORT: int = os.getenv("SQL_PORT", 3306)
+SQL_DATABASE: str = os.getenv("SQL_DATABASE", "datatables")
+SQL_USERNAME: str = os.getenv("SQL_USERNAME", "testacc")
+SQL_PASSWORD: str = os.getenv("SQL_PASSWORD", "password123")
 
 # Debug Mode Setup
 __format = "[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s"
@@ -54,7 +61,3 @@ else:
 if DISCORD_TOKEN is None:
     log.error("Discord API token not set")
     exit()
-
-if DATABASE_URI is None:
-    log.info("No datbase uri given, using default uri")
-    DATABASE_URI = "datatables.db"
