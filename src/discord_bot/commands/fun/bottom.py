@@ -2,11 +2,12 @@ import logging
 from discord.ext import commands
 log = logging.getLogger(__name__)
 
+
 class Bottom(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
-        self.CHARACTER_VALUES  = {
+
+        self.CHARACTER_VALUES = {
             200: "🫂",
             50: "💖",
             10: "✨",

@@ -1,6 +1,7 @@
 from sql.sql import SqlBaseCommands
 
 
+# DONE
 class SqlClass(SqlBaseCommands):
     def __init__(self):
         super().__init__(

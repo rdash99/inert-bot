@@ -17,7 +17,8 @@ except ImportError:
     logging.debug("python-dotenv not loaded. Hope you set your environment variables.")
 
 DEBUG: bool = bool(os.getenv("DEBUG", False))
-TOKEN: str = os.getenv("TOKEN")
+TOKEN = os.getenv("TOKEN")
+DATABASE_URI = os.getenv("DATABASE_URI")
 
 # Debug Mode Setup
 __format = "[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s"
@@ -49,9 +50,11 @@ else:
     logging.getLogger("apscheduler.scheduler:Scheduler").setLevel(logging.ERROR)
     logging.getLogger("cppimport.import_hook").setLevel(logging.ERROR)
 
-
-
 # Check for token and exit if not exists
 if TOKEN is None:
     log.error("Discord API token not set")
     exit()
+
+if DATABASE_URI is None:
+    log.info("No datbase uri given, using default uri")
+    DATABASE_URI = "datatables.db"

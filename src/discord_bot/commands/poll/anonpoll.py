@@ -10,6 +10,7 @@ from string import ascii_lowercase
 
 log = logging.getLogger(__name__)
 
+
 class AnonPoll(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -23,7 +24,6 @@ class AnonPoll(commands.Cog):
         self.sched = AsyncIOScheduler()
         client.loop.create_task(self._async_init())
         self.sched.start()
-
 
     async def _async_init(self) -> None:
         """Queues up all in progress polls
@@ -104,7 +104,8 @@ class AnonPoll(commands.Cog):
         :param payload: info about the user who voted
         :return:
         """
-        if payload.member == self.client.user: return
+        if payload.member == self.client.user:
+            return
 
         if self.sql.get_poll(payload.message_id, payload.channel_id, payload.guild_id):
             if self.sql.check_vote(payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id):
@@ -178,11 +179,14 @@ class AnonPoll(commands.Cog):
 
         # filtering out
         if len(args) > 20:
-            return await ctx.send(f"bad {ctx.author.name}! thats too much polling >:(")
+            await ctx.send(f"bad {ctx.author.name}! thats too much polling >:(")
+            return
         elif len(args) == 0:
-            return await ctx.send(f"bad {ctx.author.name}! thats too little polling >:(")
+            await ctx.send(f"bad {ctx.author.name}! thats too little polling >:(")
+            return
         elif name == '' or '' in args:
-            return await ctx.send(f"bad {ctx.author.name}! thats too simplistic polling >:(")
+            await ctx.send(f"bad {ctx.author.name}! thats too simplistic polling >:(")
+            return
 
         # creating embed for poll
         # main body
@@ -202,8 +206,21 @@ class AnonPoll(commands.Cog):
 
         # SQL Setup
         log.debug('Uploading poll data to database')
-        self.sql.add_poll(msg.id, msg.channel.id, msg.author.guild.id, name, time)
-        self.sql.add_options(msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns, args)
+        # self.sql.add_poll(msg.id, msg.channel.id, msg.author.guild.id, name, time)
+        execute(
+            """INSERT INTO polls (`message_id`, `channel_id`, `guild_id`, `name`, `time`) 
+            VALUES (?,?,?,?,?)""",
+            msg.id, msg.channel.id, msg.author.guild.id, name, time
+        )
+        # self.sql.add_options(msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns, args)
+        for n, arg in enumerate(args):
+            execute(
+                """INSERT INTO options 
+                (`message_id`, `channel_id`, `guild_id`, `emote_id`, `name`) 
+                VALUES (?,?,?,?,?)""",
+                msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns[n], arg
+            )
+        
         # Background task
         if time:
             self.sched.add_job(self._end_poll, "date", run_date=time,
