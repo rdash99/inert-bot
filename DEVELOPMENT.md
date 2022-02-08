@@ -16,6 +16,7 @@ source venv/bin/activate
 ```
 ## Installing packages
 ```bash
+pip install python-dotenv
 pip install -e .
 ```
 
