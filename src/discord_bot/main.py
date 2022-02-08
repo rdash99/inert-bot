@@ -41,8 +41,7 @@ for folders in os.listdir('./commands'):
 # prints when bot has started up
 @client.event
 async def on_ready():
-    guilds = client.guilds
-    guilds = [guild.id for guild in guilds]
+    guilds = [guild.id for guild in client.guilds]
 
     # db_guilds = sql.get_guilds()
     db_guilds = select("SELECT guild_id FROM guilds")

@@ -1,4 +1,6 @@
 import logging
+from typing import List, Optional, Any
+
 import discord
 from discord.errors import DiscordException
 from discord.ext import commands
@@ -75,7 +77,7 @@ class Role(commands.Cog):
             message = await ctx.send(f"`adding {member.name}'s roles...`")
 
             # gets a list of role classes
-            db_roles = []
+            db_roles: list[Optional[discord.Role]] = []
             for user_role in user_roles:
                 role = get(member.guild.roles, id=user_role)
                 db_roles.append(role)
@@ -103,7 +105,7 @@ class Role(commands.Cog):
             log.info(error)
 
     @commands.Cog.listener()
-    async def on_member_remove(self, member):
+    async def on_member_remove(self, member: discord.Member):
         """
         adds member's roles to database when they leave
         """
