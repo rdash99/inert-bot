@@ -34,6 +34,11 @@ requirements:
 docker-compose up -f mysql-compose.yml
 ```
 This will setup a mariadb server running on your computer with the same login details as the can be found in default.env
+go to http://localhost:8080 to view web interface
+
+username: "`root`" or "`testacc`"
+
+password: "`password123`"
 
 ### Hosting elsewhere
 
