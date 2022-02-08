@@ -18,6 +18,7 @@ except ImportError:
 
 DEBUG: bool = bool(os.getenv("DEBUG", False))
 TOKEN = os.getenv("TOKEN")
+DATABASE_URI = os.getenv("DATABASE_URI")
 
 # Debug Mode Setup
 __format = "[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s"
@@ -53,3 +54,7 @@ else:
 if TOKEN is None:
     log.error("Discord API token not set")
     exit()
+
+if DATABASE_URI is None:
+    log.info("No datbase uri given, using default uri")
+    DATABASE_URI = "datatables.db"

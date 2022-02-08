@@ -4,7 +4,9 @@ from discord.errors import DiscordException
 from discord.ext import commands
 from discord.utils import get
 
-from sql.role import SqlClass
+# from sql.role import SqlClass
+# from sqlHandler import execute, select
+from discord_bot.sqlHandler import execute, select
 log = logging.getLogger(__name__)
 
 
@@ -15,7 +17,7 @@ class Role(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.sql = SqlClass()
+        # self.sql = SqlClass()
 
     def _update_roles(self, guild):
         """
@@ -26,25 +28,29 @@ class Role(commands.Cog):
         guild_roles = guild.roles
         guild_id = guild.id
 
-        db_roles = self.sql.get_roles(guild_id)
+        # db_roles = self.sql.get_roles(guild_id)
+        db_roles = select("SELECT role_id FROM roles WHERE guild_id = ?", guild_roles)
         db_roles = [db_role[0] for db_role in db_roles]  # Removes tuples from list
 
-        lst = []
+        # lst = []
         for role in guild_roles:
             role_id = role.id
             role_name = role.name
 
             if role_id not in db_roles and role_name != "@everyone":
-                lst.append(role_id)
+                # lst.append(role_id)
+                execute("INSERT INTO roles (`role_id`,`guild_id`) VALUES (?,?)", role_id, guild_id)
 
-        self.sql.add_roles(guild_id, lst)
+        # self.sql.add_roles(guild_id, lst)
 
-        lst = []
+        # lst = []
         for db_role in db_roles:
             if not any(guild_role.id == db_role for guild_role in guild_roles):
-                lst.append(db_role)
+                # lst.append(db_role)
+                execute("DELETE FROM roles WHERE role_id = ? AND guild_id = ?", db_role, guild_id)
 
-        self.sql.remove_roles(guild_id, lst)
+        # self.sql.remove_roles(guild_id, lst)
+        
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -59,7 +65,8 @@ class Role(commands.Cog):
 
         user_id = member.id
         guild = member.guild.id
-        user_roles = self.sql.get_user_roles(user_id, guild)
+        #user_roles = self.sql.get_user_roles(user_id, guild)
+        user_roles = select("SELECT role_id FROM user_role WHERE user_id=? AND guild_id=?", user_id, guild)
         user_roles = [user_role[0] for user_role in user_roles]
 
         if len(user_roles) < 1:
@@ -78,7 +85,8 @@ class Role(commands.Cog):
                 log.debug('Adding roles to user')
                 await member.add_roles(*db_roles, reason="Automatically added roles")
                 log.debug('Deleting roles from database...')
-                self.sql.remove_user_roles(user_id, guild)
+                # self.sql.remove_user_roles(user_id, guild)
+                execute("DELETE FROM user_role WHERE `guild_id` = ? AND `guild_id` = ?", user_id, guild)
                 await message.edit(content=f"`updated {member.name}'s roles!`")
             except DiscordException as e:
                 log.debug(e)
@@ -104,12 +112,15 @@ class Role(commands.Cog):
         user_id = member.id
         user_guild_id = member.guild.id
 
-        self.sql.add_user(user_id, user_guild_id)
+        # self.sql.add_user(user_id, user_guild_id)
+        execute("INSERT OR IGNORE INTO user_guilds (`user_id`,`guild_id`) VALUES (?,?)", user_id, user_guild_id)
 
-        self.sql.remove_user_roles(user_id, user_guild_id)
+        #self.sql.remove_user_roles(user_id, user_guild_id)
+        execute("DELETE FROM user_role WHERE `user_id` = ? AND `guild_id` = ?", user_id, user_guild_id)
         user_roles = member.roles
-        lst = []
+        # lst = []
         for user_role in user_roles:
             if user_role.name != "@everyone":
-                lst.append(user_role.id)
-        self.sql.add_user_roles(user_id, lst, user_guild_id)
+                # lst.append(user_role.id)
+                execute("INSERT INTO user_role (`user_id`, `role_id`, `guild_id`) VALUES (?,?,?)", user_id, user_role.id, user_guild_id)
+        # self.sql.add_user_roles(user_id, lst, user_guild_id)

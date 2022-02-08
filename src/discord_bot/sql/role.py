@@ -1,6 +1,7 @@
 from sql.sql import SqlBaseCommands
 
 
+# DONE
 # noinspection SqlNoDataSourceInspection
 class SqlClass(SqlBaseCommands):
     def __init__(self):
