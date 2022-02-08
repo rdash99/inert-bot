@@ -1,20 +1,49 @@
 """
 This includes all the functions required for handling all database related functionality
 """
-import sqlite3
 import logging
 import os
-from discord_bot.settings import (DATABASE_URI)
+# import sqlite3
+import  mysql.connector
+from mysql.connector import Error
+# Discord settings
+from discord_bot.settings import (SQL_HOST, SQL_USERNAME, SQL_PASSWORD, SQL_PORT, SQL_DATABASE)
+log = logging.getLogger(__name__)
 
-conn = sqlite3.connect(DATABASE_URI)
-conn.row_factory = sqlite3.Row
+# Connecting to database
+conn = None
+
+try:
+    conn = mysql.connector.connect(
+        user=SQL_USERNAME,
+        password=SQL_PASSWORD,
+        host=SQL_HOST,
+        port=SQL_PORT,
+        database=SQL_DATABASE
+    )
+
+    log.info("Connection to MySQL DB successful")
+except Error as e:
+    log.error("Unable to connect to sql")
+    log.exception(e)
+    exit(1)
+
+# Initalize cursor
 c = conn.cursor()
 
-log = logging.getLogger(__name__)
+
+def sqlLogging(func):
+    """
+    Logging for all sql functionality
+    """
+    def inner(sql, *params):
+        log.debug(sql, params)
+        func()
 
 
 def init_db() -> None:
     """
+    # TODO: update this code to work with new database driver
     Sets up the database with correct tables using information from schema
     """
     for filename in os.listdir("./migrations"):
@@ -25,7 +54,7 @@ def init_db() -> None:
             conn.commit()
 
 
-# TODO: This can probably be imporved but it works
+@sqlLogging
 def select(sql: str, *params) -> list:
     """
     Selects information from a database
@@ -34,6 +63,7 @@ def select(sql: str, *params) -> list:
     return c.fetchall()
 
 
+@sqlLogging
 def execute(sql: str, *params) -> None:
     """
     Executes an sql statement and catches integraty errors
@@ -41,6 +71,12 @@ def execute(sql: str, *params) -> None:
     try:
         c.execute(sql, params)
         conn.commit()
-    except sqlite3.IntegrityError as e:
+    except Exception as e:
         conn.rollback()
-        log.error("%s", e)
+        log.exception(e)
+
+if __name__=="__main__":
+    execute("INSERT INTO guilds (guild_id) VALUES (?)", 123)
+    data = select("SELECT * FROM guilds")
+    print(data)
+    #init_db()
