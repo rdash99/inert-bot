@@ -17,7 +17,7 @@ except ImportError:
     logging.debug("python-dotenv not loaded. Hope you set your environment variables.")
 
 DEBUG: bool = bool(os.getenv("DEBUG", False))
-TOKEN = os.getenv("TOKEN")
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 DATABASE_URI = os.getenv("DATABASE_URI")
 
 # Debug Mode Setup
@@ -51,7 +51,7 @@ else:
     logging.getLogger("cppimport.import_hook").setLevel(logging.ERROR)
 
 # Check for token and exit if not exists
-if TOKEN is None:
+if DISCORD_TOKEN is None:
     log.error("Discord API token not set")
     exit()
 

@@ -5,7 +5,7 @@ from discord.ext import commands
 
 # from sql.prefix import SqlClass
 from discord_bot.sqlHandler import (init_db, select, execute)
-from discord_bot.settings import (TOKEN, DEBUG)
+from discord_bot.settings import (DISCORD_TOKEN, DEBUG)
 
 log = logging.getLogger(__name__)
 
@@ -83,4 +83,4 @@ async def before_invoke(ctx):
 
 
 log.info('Starting bot')
-client.run(TOKEN)
+client.run(DISCORD_TOKEN)
