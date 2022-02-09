@@ -209,7 +209,7 @@ class AnonPoll(commands.Cog):
         # self.sql.add_poll(msg.id, msg.channel.id, msg.author.guild.id, name, time)
         execute(
             """INSERT INTO polls (`message_id`, `channel_id`, `guild_id`, `name`, `time`) 
-            VALUES (?,?,?,?,?)""",
+            VALUES (%s,%s,%s,%s,%s)""",
             msg.id, msg.channel.id, msg.author.guild.id, name, time
         )
         # self.sql.add_options(msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns, args)
@@ -217,7 +217,7 @@ class AnonPoll(commands.Cog):
             execute(
                 """INSERT INTO options 
                 (`message_id`, `channel_id`, `guild_id`, `emote_id`, `name`) 
-                VALUES (?,?,?,?,?)""",
+                VALUES (%s,%s,%s,%s,%s)""",
                 msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns[n], arg
             )
         

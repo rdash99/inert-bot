@@ -7,6 +7,8 @@ from discord.ext import commands
 from discord_bot.sqlHandler import (init_db, select, execute)
 from discord_bot.settings import (DISCORD_TOKEN, DEBUG)
 
+# TODO: Move this to the config.json file
+DEFAULT_PREFIX = "."
 log = logging.getLogger(__name__)
 
 # Creating client
@@ -15,7 +17,7 @@ init_db()
 
 
 def get_prefix(client, message):
-    return select("select prefix from guilds where guild_id = ?", message.guild.id)[0][0]
+    return select("select prefix from guilds where guild_id = %s", message.guild.id)[0][0]
     # return sql.get_prefix(message.guild.id)[0][0]
 
 
@@ -29,7 +31,7 @@ if DEBUG is True:
     log.info("=== DEBUG MODE ENABLED ===")
 
 # loads all cogs
-for folders in os.listdir('./commands'):
+for folders in os.listdir(f"{os.path.dirname(__file__)}/commands"):
     try:
         logging.debug(f'loading {folders}...')
         client.load_extension(f'commands.{folders}')
@@ -50,7 +52,7 @@ async def on_ready():
     # lst = []
     for guild in guilds:
         if guild not in db_guilds:
-            execute("insert into guilds (`guild_id`, `prefix`) values (?,?)", guild, DEFAULT_PREFIX)
+            execute("insert into guilds (`guild_id`, `prefix`) values (%s,%s)", guild, DEFAULT_PREFIX)
 
     # sql.add_guilds(lst, ".")
 
@@ -58,7 +60,7 @@ async def on_ready():
     for db_guild in db_guilds:
         if db_guild not in guilds:
             # lst.append(db_guild)
-            execute("delete from guilds where guild_id=?", db_guild)
+            execute("delete from guilds where guild_id=%s", db_guild)
 
     # sql.remove_guilds(lst)
     log.info("bot ready")
@@ -67,13 +69,13 @@ async def on_ready():
 @client.event
 async def on_guild_join(guild):
     # sql.add_guild(guild.id, ".")
-    execute("insert into guilds (`guild_id`, `prefix`) values (?,?)", guild.id, DEFAULT_PREFIX)
+    execute("insert into guilds (`guild_id`, `prefix`) values (%s,%s)", guild.id, DEFAULT_PREFIX)
 
 
 @client.event
 async def on_guild_remove(guild):
     # sql.remove_guild(guild.id)
-    execute("delete from guilds where guild_id=?", guild.id)
+    execute("delete from guilds where guild_id=%s", guild.id)
 
 
 @client.before_invoke

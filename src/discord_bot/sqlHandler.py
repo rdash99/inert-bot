@@ -38,10 +38,7 @@ def sqlLogging(func):
     """
     def inner(sql, *params):
         # Checking whether params have been given for logging module
-        if len(params) == 0:
-            log.debug(sql)
-        else:
-            log.debug(sql, params)
+        log.debug(f"{sql} {params}")
         
         return func(sql, params)
     return inner
