@@ -82,5 +82,10 @@ async def before_invoke(ctx):
     log.info(f'{ctx.author} used {ctx.command} at {ctx.message.created_at}')
 
 
-log.info('Starting bot')
-client.run(DISCORD_TOKEN)
+def main():
+    log.info('Starting bot')
+    client.run(DISCORD_TOKEN)
+
+
+if __name__=="__main__":
+    main()
