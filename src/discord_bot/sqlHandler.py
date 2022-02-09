@@ -37,25 +37,35 @@ def sqlLogging(func):
     Logging for all sql functionality
     """
     def inner(sql, *params):
-        log.debug(sql, params)
-        func()
+        # Checking whether params have been given for logging module
+        if len(params) == 0:
+            log.debug(sql)
+        else:
+            log.debug(sql, params)
+        
+        return func(sql, params)
+    return inner
 
 
 def init_db() -> None:
     """
-    # TODO: update this code to work with new database driver
     Sets up the database with correct tables using information from schema
     """
-    for filename in os.listdir("./migrations"):
+    log.debug("Initalising database")
+    for filename in os.listdir(f"{os.path.dirname(__file__)}/migrations"):
         if filename.endswith(".sql"):
-            with open(f"./migrations/{filename}", "r") as schema_file:
+            log.debug("Updating %s", filename)
+            with open(f"{os.path.dirname(__file__)}/migrations/{filename}", "r") as schema_file:
                 schema = schema_file.read()
-            conn.executescript(schema)
+            
+            data = c.execute(schema, multi=True)
+            for dat in data:
+                log.debug(dat)
             conn.commit()
 
 
 @sqlLogging
-def select(sql: str, *params) -> list:
+def select(sql: str, params) -> list:
     """
     Selects information from a database
     """
@@ -64,7 +74,7 @@ def select(sql: str, *params) -> list:
 
 
 @sqlLogging
-def execute(sql: str, *params) -> None:
+def execute(sql: str, params) -> None:
     """
     Executes an sql statement and catches integraty errors
     """
@@ -74,9 +84,3 @@ def execute(sql: str, *params) -> None:
     except Exception as e:
         conn.rollback()
         log.exception(e)
-
-if __name__=="__main__":
-    execute("INSERT INTO guilds (guild_id) VALUES (?)", 123)
-    data = select("SELECT * FROM guilds")
-    print(data)
-    #init_db()

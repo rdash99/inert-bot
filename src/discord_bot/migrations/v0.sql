@@ -1,5 +1,3 @@
--- Schema 1.0v
-
 -- Used to store information about servers
 CREATE TABLE IF NOT EXISTS guilds (
   guild_id integer PRIMARY KEY,
@@ -31,7 +29,7 @@ CREATE TABLE IF NOT EXISTS messages (
   PRIMARY KEY (user_id, guild_id)
 );
 
--- Links role_id to guilds 
+-- Stores roles id per server
 CREATE TABLE IF NOT EXISTS roles (
   role_id integer,
   guild_id integer,
@@ -60,7 +58,7 @@ CREATE TABLE IF NOT EXISTS polls (
   PRIMARY KEY (message_id, channel_id, guild_id)
 );
 
-
+-- Stores the different voting option for polls
 CREATE TABLE IF NOT EXISTS options (
   message_id integer,
   channel_id integer,
@@ -71,7 +69,7 @@ CREATE TABLE IF NOT EXISTS options (
   PRIMARY KEY (emote_id, message_id, channel_id, guild_id)
 );
 
-
+-- Stores the votes on these options
 CREATE TABLE IF NOT EXISTS votes (
   user_id integer,
   emote_id integer,
