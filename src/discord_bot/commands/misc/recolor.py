@@ -24,7 +24,7 @@ class Recolor(commands.Cog):
         :return:
         :return:
         """
-        reg = re.compile(r'https?:/.*\.(png|jpg|jpeg|gif|jfif|bmp)')
+        reg = re.compile(r'https%s:/.*\.(png|jpg|jpeg|gif|jfif|bmp)')
 
         if ctx.message.attachments:
             data = await ctx.message.attachments[0].read()

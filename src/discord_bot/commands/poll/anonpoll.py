@@ -5,8 +5,8 @@ import discord
 import re
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext import commands
-from sql.polls import SqlClass
-from string import ascii_lowercase
+#from sql.polls import SqlClass
+from discord_bot.sqlHandler import (select, execute)
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +14,6 @@ log = logging.getLogger(__name__)
 class AnonPoll(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.sql = SqlClass()
 
         self.pollsigns = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "🇯", "🇰", "🇱", "🇲", "🇳", "🇴",
                           "🇵", "🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
@@ -30,7 +29,7 @@ class AnonPoll(commands.Cog):
         :return:
         """
         await self.client.wait_until_ready()
-        polls = self.sql.get_polls()
+        polls = select("SELECT time, message_id, channel_id, guild_id FROM polls")
         now = datetime.datetime.now()
 
         for poll in polls:
@@ -53,10 +52,11 @@ class AnonPoll(commands.Cog):
         :param guild_id:
         :return:
         """
-        poll = self.sql.get_poll_time(message_id, channel_id, guild_id)
+        poll = select("""SELECT time, message_id, channel_id, guild_id FROM polls
+        WHERE message_id=? AND channel_id=? AND guild_id=?""", message_id, channel_id, guild_id )
         if poll:
             log.debug('Deleting poll')
-            self.sql.remove_poll(message_id, channel_id, guild_id)
+            execute("DELETE FROM polls WHERE message_id=? AND channel_id=? AND guild_id=?", message_id, channel_id, guild_id)
             if poll[0][0]:
                 self.sched.remove_job(str(poll[0][1]) + str(poll[0][2]) + str(poll[0][3]))
 
@@ -71,7 +71,7 @@ class AnonPoll(commands.Cog):
         channel = self.client.get_channel(channel_id)
 
         await channel.send(embed=embed)
-        self.sql.remove_poll(message_id, channel_id, guild_id)
+        execute("DELETE FROM polls WHERE message_id=? AND channel_id=? AND guild_id=?", message_id, channel_id, guild_id)
 
     def _count_poll(self, message_id: int, channel_id: int, guild_id: int) -> object:
         """Counts up the votes for a poll and returns the embed
@@ -80,13 +80,18 @@ class AnonPoll(commands.Cog):
         :param guild_id: guild of the poll
         :return: discord.Embed
         """
-        poll_info = self.sql.get_poll(message_id, channel_id, guild_id)
+        poll_info = select("""SELECT polls.name, options.name, options.emote_id, polls.message_id, polls.channel_id, polls.guild_id
+        FROM polls, options
+        WHERE polls.message_id=? AND polls.channel_id=? AND polls.guild_id=?
+        AND polls.message_id = options.message_id
+        AND polls.channel_id = options.channel_id
+        AND polls.guild_id = options.guild_id""", message_id, channel_id, guild_id)
 
         votes = {}
         for poll in poll_info:
             votes[poll[2]] = [0, poll[1]]
 
-        user_votes = self.sql.get_votes(message_id, channel_id, guild_id)
+        user_votes = select("SELECT votes.emote_id FROM votes WHERE votes.message_id=? AND votes.channel_id=? AND votes.guild_id=?", message_id, channel_id, guild_id)
 
         for vote in user_votes:
             votes[vote[0]][0] += 1
@@ -107,12 +112,20 @@ class AnonPoll(commands.Cog):
         if payload.member == self.client.user:
             return
 
-        if self.sql.get_poll(payload.message_id, payload.channel_id, payload.guild_id):
-            if self.sql.check_vote(payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id):
-                self.sql.remove_vote(payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id)
+        # Get Polls
+        if select("""SELECT polls.name, options.name, options.emote_id, polls.message_id, polls.channel_id, polls.guild_id
+        FROM polls, options
+        WHERE polls.message_id=? AND polls.channel_id=? AND polls.guild_id=?
+        AND polls.message_id = options.message_id
+        AND polls.channel_id = options.channel_id
+        AND polls.guild_id = options.guild_id""", payload.message_id, payload.channel_id, payload.guild_id):
+            # Check votes
+            if select("SELECT message_id FROM votes WHERE votes.discord_id=? AND votes.emote_id=? AND votes.message_id=? AND votes.channel_id=? AND votes.guild_id=?", payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id):
+                # Remove votes
+                execute("DELETE FROM votes WHERE discord_id=? AND emote_id=? AND message_id=? AND channel_id=? AND guild_id=?", payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id)
             else:
-                self.sql.add_user(payload.user_id, payload.guild_id)
-                self.sql.add_vote(payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id)
+                # Add vote
+                execute("INSERT INTO votes (`discord_id`, `emote_id`, `message_id`, `channel_id`, `guild_id`) VALUES (?,?,?,?,?)",payload.user_id, payload.emoji.name, payload.message_id, payload.channel_id, payload.guild_id)
 
             # deletes reaction if it found the poll
             channel = self.client.get_channel(payload.channel_id)
@@ -209,7 +222,7 @@ class AnonPoll(commands.Cog):
         # self.sql.add_poll(msg.id, msg.channel.id, msg.author.guild.id, name, time)
         execute(
             """INSERT INTO polls (`message_id`, `channel_id`, `guild_id`, `name`, `time`) 
-            VALUES (?,?,?,?,?)""",
+            VALUES (%s,%s,%s,%s,%s)""",
             msg.id, msg.channel.id, msg.author.guild.id, name, time
         )
         # self.sql.add_options(msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns, args)
@@ -217,7 +230,7 @@ class AnonPoll(commands.Cog):
             execute(
                 """INSERT INTO options 
                 (`message_id`, `channel_id`, `guild_id`, `emote_id`, `name`) 
-                VALUES (?,?,?,?,?)""",
+                VALUES (%s,%s,%s,%s,%s)""",
                 msg.id, msg.channel.id, msg.author.guild.id, self.pollsigns[n], arg
             )
         
@@ -253,7 +266,16 @@ class AnonPoll(commands.Cog):
         """
         await ctx.message.delete()
 
-        votes = self.sql.check_votes(ctx.author.id, ctx.author.guild.id)
+        # votes = self.sql.check_votes(ctx.author.id, ctx.author.guild.id)
+        votes = select("""
+        SELECT polls.message_id, polls.channel_id, polls.guild_id, options.emote_id, options.name, polls.name
+        FROM votes, options, polls
+        WHERE votes.discord_id = ? AND votes.guild_id = ?
+        AND votes.emote_id = options.emote_id
+        AND votes.message_id = options.message_id AND options.message_id = polls.message_id
+        AND votes.channel_id = options.channel_id AND options.channel_id = polls.channel_id
+        AND votes.guild_id = options.guild_id AND options.guild_id = polls.guild_id
+        """, ctx.author.id, ctx.author.guild.id)
         # [(809138215331168317, 809080848057106432, 798298345177088022, '🇦', 'arg1', 'name of poll'), ...
         # count unique occurrences of (message_id, channel_id, guild_id) in (votes[0],votes[1],votes[2])
         polls = [(vote[0], vote[1], vote[2]) for vote in votes]  # removes unnessary code from list
@@ -298,11 +320,11 @@ class AnonPoll(commands.Cog):
         embed = self._count_poll(message_id, ctx.channel.id, ctx.author.guild.id)
         if not dm:
             await ctx.send(embed=embed)
-            self.sql.remove_poll(message_id, ctx.channel.id, ctx.author.guild.id)
+            execute("DELETE FROM polls WHERE message_id=? AND channel_id=? AND guild_id=?", message_id, ctx.channel.id, ctx.author.guild.id)
         else:
             try:
                 await ctx.author.send(embed=embed)
-                self.sql.remove_poll(message_id, ctx.channel.id, ctx.author.guild.id)
+                execute("DELETE FROM polls WHERE message_id=? AND channel_id=? AND guild_id=?", message_id, ctx.channel.id, ctx.author.guild.id)
             except discord.errors.Forbidden:
                 # if user has dms disabled
                 msg = await ctx.send('I cant send you a DM! please check your discord settings')
