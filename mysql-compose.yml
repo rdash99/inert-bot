@@ -1,0 +1,34 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: datatables
+      MYSQL_USER: testacc
+      MYSQL_PASSWORD: password123
+    volumes:
+     - ./src/discord_bot/migrations:/docker-entrypoint-initdb.d
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.5
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks: 
+      vpcbr:
+        ipv4_address: 10.5.0.6
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
