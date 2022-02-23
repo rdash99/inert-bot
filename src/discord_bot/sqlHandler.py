@@ -55,10 +55,12 @@ def init_db() -> None:
             with open(f"{os.path.dirname(__file__)}/migrations/{filename}", "r") as schema_file:
                 schema = schema_file.read()
             
-            data = c.execute(schema, multi=True)
-            for dat in data:
-                log.debug(dat)
-            conn.commit()
+            for result in c.execute(schema, multi=True):
+                comment = result.statement.split('\n',1)[0]
+                log.debug(comment)
+    
+    conn.commit()
+                            
 
 
 @sqlLogging
@@ -81,3 +83,7 @@ def execute(sql: str, params) -> None:
     except Exception as e:
         conn.rollback()
         log.exception(e)
+
+if __name__=="__main__":
+    # testing db code
+    init_db()

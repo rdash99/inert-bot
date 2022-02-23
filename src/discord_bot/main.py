@@ -35,7 +35,7 @@ if DEBUG is True:
 for folders in os.listdir(f"{os.path.dirname(__file__)}/commands"):
     try:
         logging.debug(f'loading {folders}...')
-        client.load_extension(f'commands.{folders}')
+        client.load_extension(f'discord_bot.commands.{folders}')
     except Exception as e:
         log.error(type(e))
         log.error(e)
