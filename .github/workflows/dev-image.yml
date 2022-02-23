@@ -16,7 +16,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=${{ secrets.DOCKER_USERNAME }}/inert-dev}
+          DOCKER_IMAGE=${{ secrets.DOCKER_USERNAME }}/inert-dev
           VERSION=latest
           SHORTREF=${GITHUB_SHA::8}
 
