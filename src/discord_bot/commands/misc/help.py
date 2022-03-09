@@ -62,7 +62,7 @@ class Help(commands.Cog):
         :param group:
         :return:
         """
-        group_cog = self.client.get_cog(f"ot.commands.{group}")
+        group_cog = self.client.get_cog(f"ot.commands.{format(group).lower()}")
         if group_cog is not None:
             cmds = group_cog.get_commands()
             help_str = f"""```md\n**Category**\n{group_cog.description}"""
