@@ -145,7 +145,7 @@ class AnonPoll(commands.Cog):
 
     @commands.command(aliases=['poll2'])
     async def anonpoll(self, ctx, *, args) -> None:
-        """Creates anonymous poll with optional timed ending. limit of 20 options
+        """Creates anonymous poll with optional timed ending. With a limit of 20 options
         :param ctx:
         :param args: 1d2h3m4s {title}[arg][arg]
         :return: Creates a poll with timed output

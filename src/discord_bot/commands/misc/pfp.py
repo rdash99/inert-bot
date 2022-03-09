@@ -11,7 +11,7 @@ class Pfp(commands.Cog):
 
     @commands.command(aliases=['avatar'])
     async def pfp(self, ctx, *, member: discord.Member = None):
-        """Gets your pfp or pfp of another
+        """Gets your pfp or pfp of another user
         :param ctx:
         :param member: optional. the user who's pfp you want to see
         :return: embed with pfp
