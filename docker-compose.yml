@@ -14,14 +14,3 @@ services:
         env_file: 
             - .env
 
-        networks:
-            vpcbr:
-                ipv4_address: 10.5.0.4
-
-networks:
-  vpcbr:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 10.5.0.0/16
-         gateway: 10.5.0.1
