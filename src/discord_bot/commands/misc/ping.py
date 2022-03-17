@@ -9,7 +9,7 @@ class Ping(commands.Cog):
     @commands.command()
     async def ping(self, ctx: commands.Context):
         """
-        : works out latency of
+        : Works out latency through sending a message
         """
         t1 = time()
         msg = await ctx.send('`pong`')
