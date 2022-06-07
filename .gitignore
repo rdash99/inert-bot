@@ -304,7 +304,3 @@ fabric.properties
 
 # C++ compiled file
 .rendered*
-
-# other shit
-.devcontainer/
-build.sh
