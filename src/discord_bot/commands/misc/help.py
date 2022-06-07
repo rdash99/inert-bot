@@ -26,7 +26,7 @@ class Help(commands.Cog):
                 cogs[j + 1] = cog
 
             for cog_name, cog_object in cogs:
-                help_str += f"\n# {cog_name} \n- {cog_object.description}"
+                help_str += f"\n# {format(cog_name[12:]).capitalize()} \n- {cog_object.description}"
 
             help_str += "\n\nrun .help command <command> or .help group <group> to get more info```"
             await ctx.send(help_str)
@@ -62,7 +62,7 @@ class Help(commands.Cog):
         :param group:
         :return:
         """
-        group_cog = self.client.get_cog(group)
+        group_cog = self.client.get_cog(f"ot.commands.{format(group).lower()}")
         if group_cog is not None:
             cmds = group_cog.get_commands()
             help_str = f"""```md\n**Category**\n{group_cog.description}"""
