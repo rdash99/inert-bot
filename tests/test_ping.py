@@ -2,21 +2,13 @@ import discord
 import pytest
 import discord.ext.test as dpytest
 
-
 @pytest.mark.asyncio
-async def test_message(bot):
+@pytest.mark.command("misc")
+async def test_edit_cog(bot):
     guild = bot.guilds[0]
-    channel = guild.text_channels[0]
+    member = guild.members[0]
+    dm = await member.create_dm()
+    await dpytest.message("!ping", dm)
 
-    await channel.send("Test Message")
-
-
-@pytest.mark.asyncio
-async def test_embed(bot):
-    guild = bot.guilds[0]
-    channel = guild.text_channels[0]
-
-    embed = discord.Embed(title="Test Embed")
-    embed.add_field(name="Field 1", value="Lorem ipsum")
-
-    await channel.send(embed=embed)
+    assert dpytest.verify().message().content("`pong`")
+    assert dpytest.verify().message().content("`Pong! Latency is 0ms. API Latency is 0ms`")

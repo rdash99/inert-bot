@@ -26,12 +26,12 @@ def bot(request, event_loop):
     marks = request.function.pytestmark
     mark = None
     for mark in marks:
-        if mark.name == "cogs":
+        if mark.name == "command":
             break
 
     if mark is not None:
         for extension in mark.args:
-            b.load_extension("tests.internal." + extension)
+            b.load_extension("discord_bot.commands." + extension)
 
     test.configure(b)
     return b
@@ -54,26 +54,3 @@ def pytest_sessionfinish(session, exitstatus):
             os.remove(filePath)
         except Exception:
             print("Error while deleting file : ", filePath)
-
-
-# @pytest.fixture
-# def bot(event_loop):
-#     """Create the bot test environment to use with every test"""
-#     client = commands.Bot(
-#         command_prefix="!", event_loop=event_loop, intents=discord.Intents.all()
-#     )
-
-#     # Load extensions
-#     log.debug("Loading default extensions...")
-
-#     # loads all cogs
-#     for folders in os.listdir(f"{os.path.dirname(discord_bot.__file__)}/commands"):
-#         try:
-#             log.debug(f'loading {folders}...')
-#             client.load_extension(f'discord_bot.commands.{folders}')
-#         except Exception as e:
-#             log.error(type(e))
-#             log.error(e)
-
-#     dpytest.configure(client)
-#     return client
