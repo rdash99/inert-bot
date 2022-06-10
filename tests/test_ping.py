@@ -1,18 +1,22 @@
-"""Testing"""
+import discord
 import pytest
-import logging
-import asyncio
-from discord.ext.commands import Context
-from discord_bot.commands.misc.ping import Ping
+import discord.ext.test as dpytest
 
-log = logging.getLogger(__name__)
 
 @pytest.mark.asyncio
-async def test_ping(bot):
-    """Test if the ping command works"""
-    cog = Ping()
-    ctx = Context()
+async def test_message(bot):
+    guild = bot.guilds[0]
+    channel = guild.text_channels[0]
 
-    cog.ping.invoke(ctx)
-    assert True
+    await channel.send("Test Message")
 
+
+@pytest.mark.asyncio
+async def test_embed(bot):
+    guild = bot.guilds[0]
+    channel = guild.text_channels[0]
+
+    embed = discord.Embed(title="Test Embed")
+    embed.add_field(name="Field 1", value="Lorem ipsum")
+
+    await channel.send(embed=embed)
