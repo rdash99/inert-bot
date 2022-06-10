@@ -2,6 +2,8 @@
 colorapp.cpython*
 .rendered*
 __pycache__/
+**/__pycache__
+**/*.pyc
 
 # ignore readme
 *.md
