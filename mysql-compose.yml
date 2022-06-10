@@ -4,7 +4,7 @@ services:
 
   db:
     image: mariadb
-    restart: always
+    restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: password123
       MYSQL_DATABASE: datatables
@@ -20,7 +20,7 @@ services:
 
   adminer:
     image: adminer
-    restart: always
+    restart: on-failure
     ports:
       - 8080:8080
     networks: 

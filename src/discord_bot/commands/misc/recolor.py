@@ -37,6 +37,7 @@ class Recolor(commands.Cog):
                 message_url_string = message_url.group(0) if message_url else ''
 
                 # print(file_url, message_url_string)
+                # TODO: this is causing some breakages im pretty sure
                 if reg.match(file_url) or message_url_string:  # self.reg to check for images in links
                     url = file_url if file_url else message_url_string
                     # found attachment with image file format
@@ -45,6 +46,7 @@ class Recolor(commands.Cog):
                             data = await response.read()
                     break
             else:
+                # TODO: shouldnt return None here. it should raise an error and get handled by error handling
                 return None
             # opens and converts to correct file type
         img = Image.open(io.BytesIO(data))
