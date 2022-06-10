@@ -1,3 +1,0 @@
-[submodule "libs/dpytest"]
-	path = libs/dpytest
-	url = https://github.com/Blotz/dpytest
