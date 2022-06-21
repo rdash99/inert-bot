@@ -5,7 +5,7 @@
   A Discord bot written in python 3.8 or greater!
 </h6>
 
-[![Testing](https://github.com/inert-bot/discord-bot/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/inert-bot/discord-bot/actions/workflows/tests.yml)
+[![Testing](https://github.com/inert-bot/discord-bot/actions/workflows/tests.yml/badge.svg)](https://github.com/inert-bot/discord-bot/actions/workflows/tests.yml)
 <a href="https://github.com/inert-bot/discord-bot/blob/main/LICENSE" target="_blank">
   <img alt="License: GPL--3.0 Licence" src="https://img.shields.io/badge/License-GPL--3.0 Licence-yellow.svg" />
 </a>
