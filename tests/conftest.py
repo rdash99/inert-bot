@@ -9,6 +9,7 @@ import discord
 import discord.ext.commands as commands
 import discord.ext.test as test
 
+import discord_bot
 
 @pytest.fixture
 def client(event_loop):
@@ -31,7 +32,9 @@ def bot(request, event_loop):
 
     if mark is not None:
         for extension in mark.args:
-            b.load_extension("discord_bot.commands." + extension)
+            b.load_extension(f".commands.{extension}", package="discord_bot")
+            # b.load_extension(f"discord_bot.commands.{extension}")
+
 
     test.configure(b)
     return b
