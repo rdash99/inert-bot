@@ -13,8 +13,8 @@ class Uwu(commands.Cog):
         """
         UwU-ifies any message you give it... no matter the size owo
         """
-        uwus = ['UwU', 'xwx', 'DwD', 'ÚwÚ', 'uwu', '☆w☆', '✧w✧',
-                '♥w♥', '︠uw ︠u', '(uwu)', 'OwO', 'owo', 'Owo', 'owO', '( ͡° ͜ʖ ͡°)']
+        uwus = ['UwU', 'xwx', 'DwD', 'ÙwÚ', 'uwu', '☆w☆', '✧w✧',
+                '♥w♥', 'ùwú', '(uwu)', 'OwO', 'owo', 'Owo', 'owO', '( ͡° ͜ʖ ͡°)']
         res = message.replace("r", "w").replace(
             "l", "w").replace("L", "W").replace("R", "W")
         res = res.replace("the ", "da ").replace(
