@@ -5,14 +5,11 @@
   A Discord bot written in python 3.8 or greater!
 </h6>
 
-<p>
-  <a href="https://github.com/Blotz/inert-bot/discord-bot/wiki" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="https://github.com/Blotz/inert-bot/discord-bot/blob/main/LICENSE" target="_blank">
-    <img alt="License: GPL--3.0 Licence" src="https://img.shields.io/badge/License-GPL--3.0 Licence-yellow.svg" />
-  </a>
-</p>
+[![Testing](https://github.com/inert-bot/discord-bot/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/inert-bot/discord-bot/actions/workflows/tests.yml)
+<a href="https://github.com/inert-bot/discord-bot/blob/main/LICENSE" target="_blank">
+  <img alt="License: GPL--3.0 Licence" src="https://img.shields.io/badge/License-GPL--3.0 Licence-yellow.svg" />
+</a>
+
 
 ---
 # ABOUT
@@ -32,10 +29,10 @@ you will need a working install of docker-compose, python and pip in order to de
 * Github: [@Blotz](https://github.com/Blotz)
 
 ### 🤝 Contributing
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/Blotz/inert-bot/discord-bot/issues).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/inert-bot/discord-bot/issues).
 
 ---
 ## 📝 License
 
 Copyright © 2021 [Blotz](https://github.com/Blotz).<br />
-This project is [GPL--3.0 Licence](https://github.com/Blotz/inert-bot/discord-bot/blob/main/LICENSE) licensed.
+This project is [GPL--3.0 Licence](https://github.com/inert-bot/discord-bot/blob/main/LICENSE) licensed.
