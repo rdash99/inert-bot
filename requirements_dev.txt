@@ -3,3 +3,4 @@ tox==3.24.3
 pytest==6.2.5
 pytest-cov==2.12.1
 mypy===0.910
+dpytest @ git+https://github.com/Blotz/dpytest.git@a3ee2958de1aa03fb4c3640ab3ca34742b73714d
