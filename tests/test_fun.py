@@ -52,7 +52,7 @@ async def test_urban_dictionary(bot):
 async def test_uwu(bot):
     await dpytest.message("!uwu abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZtheTheTHEthTH\n ")
     message = dpytest.get_message()
-    match = re.match("([A-KM-QS-Za-km-qs-z]){52}deTheDEdD (UwU|xwx|DwD|ÚwÚ|uwu|☆w☆|✧w✧|♥w♥|uw ︠u|\(uwu\)|OwO|owo|Owo|owO|\( ͡° ͜ʖ ͡°\))", message.content)
+    match = re.match("([^rRlL]){52}deTheDEdD (([UuOoÙùDx☆✧♥]w[UuOoÚúDx☆✧♥])|\(uwu\)|\( ͡° ͜ʖ ͡°\))", message.content)
     assert match is not None
 
 @pytest.mark.skip(reason="Broken implementation")
