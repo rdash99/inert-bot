@@ -6,8 +6,6 @@
 #include <cmath>
 #include <typeinfo>
 
-namespace py = pybind11;
-
 py::bytes recolor(std::string img, unsigned int height, unsigned int width, unsigned char r, unsigned char g, unsigned char b, float intensity){
 	//create vector of prescaled target rgb
 	std::vector<unsigned char> rgb = {r, g, b};
@@ -22,13 +20,23 @@ py::bytes recolor(std::string img, unsigned int height, unsigned int width, unsi
 	return(img);
 }
 
-PYBIND11_MODULE(recolor, m){
-    m.doc() = "recolor images in cpp";
-    m.def("recolor", &recolor);
-}
 
-/*
-<%
-setup_pybind11(cfg)
-%>
-*/
+namespace py = pybind11;
+
+PYBIND11_MODULE(discord_bot, m) {
+    m.doc() = R"pbdoc(
+        discord_bot cpp module
+        -----------------------
+
+        .. currentmodule:: discord_bot
+
+        .. autosummary::
+           :toctree: _generate
+
+           recolor
+
+    )pbdoc";
+
+    m.def("add", &recolor, R"pbdoc(
+        recolors an image
+    )pbdoc");

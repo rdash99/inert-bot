@@ -1,0 +1,7 @@
+recursive-include tests *.py
+recursive-include src *.py *.cpp
+include *.py
+include MANIFEST.in
+include LICENSE
+include pytest.ini
+include tox.ini

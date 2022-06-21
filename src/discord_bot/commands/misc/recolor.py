@@ -7,8 +7,8 @@ import discord
 from PIL import Image, ImageColor
 from discord.ext import commands
 
-import cppimport.import_hook  # noqa: F401
-from .cpp_functions import recolor
+# import cppimport.import_hook  # noqa: F401
+# from discord_bot.cpp_functions import recolor
 
 log = logging.getLogger(__name__)
 
