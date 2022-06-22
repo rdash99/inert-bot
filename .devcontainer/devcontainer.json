@@ -32,7 +32,9 @@
 				"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
 				"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
 				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
+				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
+				"python.testing.unittestEnabled": false,
+				"python.testing.pytestEnabled": true
 			},
 			
 			// Add the IDs of extensions you want installed when the container is created.
@@ -45,14 +47,15 @@
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
+	
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "pip3 install --user -r requirements.txt",
-
+	// "onCreateCommand": "sudo apt-get install python3-dev",
+	"postCreateCommand": "pip3 install --user -e . && pip3 install --user -r requirements_dev.txt && docker-compose -f mysql-compose.yml up -d",
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode",
 	"features": {
 		"docker-in-docker": "latest",
-		"git": "latest"
+		"git": "os-provided"
 	}
 }
