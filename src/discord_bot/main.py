@@ -4,7 +4,7 @@ from discord import Intents
 from discord.ext import commands
 
 # from sql.prefix import SqlClass
-from discord_bot.sqlHandler import (init_db, select, execute)
+from discord_bot.SqlHandler import (init_db, select, execute)
 from discord_bot.settings import (DISCORD_TOKEN, DEBUG)
 
 # TODO: Move this to the config.json file

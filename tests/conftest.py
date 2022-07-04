@@ -5,11 +5,15 @@ for the virtual bot to run. also imports the command being used
 import glob
 import os
 import pytest
+
 import discord
 import discord.ext.commands as commands
 import discord.ext.test as test
 
-import discord_bot
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.pool import NullPool
+from zope.sqlalchemy import register
 
 @pytest.fixture
 def client(event_loop):
@@ -35,7 +39,6 @@ def bot(request, event_loop):
             b.load_extension(f".commands.{extension}", package="discord_bot")
             # b.load_extension(f"discord_bot.commands.{extension}")
 
-
     test.configure(b)
     return b
 
@@ -57,3 +60,4 @@ def pytest_sessionfinish(session, exitstatus):
             os.remove(filePath)
         except Exception:
             print("Error while deleting file : ", filePath)
+            

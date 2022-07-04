@@ -1,6 +1,6 @@
 from discord.ext import commands
 # from sql.prefix import SqlClass
-from discord_bot.sqlHandler import execute
+from discord_bot.SqlHandler import execute
 
 class SetPrefix(commands.Cog):
     def __init__(self, client):
@@ -13,5 +13,5 @@ class SetPrefix(commands.Cog):
         """
         Update the prefix for the discord server
         """
-        execute("INSERT INTO guilds (prefix) VALUES (%s) WHERE guild_id=%s", prefix, ctx.guild.id)
+        execute("INSERT INTO guilds (prefix) VALUES (%s) WHERE guild_id=%s", (prefix, ctx.guild.id))
         await ctx.send(f"Updated prefix to: {prefix}")

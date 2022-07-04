@@ -8,7 +8,7 @@ from discord.utils import get
 
 # from sql.role import SqlClass
 # from sqlHandler import execute, select
-from discord_bot.sqlHandler import execute, select
+from discord_bot.SqlHandler import execute, select
 log = logging.getLogger(__name__)
 
 

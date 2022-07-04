@@ -1,5 +1,3 @@
-from pathlib import Path
-import discord
 import pytest
 import discord.ext.test as dpytest
 import re

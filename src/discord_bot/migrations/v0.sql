@@ -1,3 +1,11 @@
+-- Schema version: 0
+CREATE TABLE IF NOT EXISTS meta (
+    version INTEGER PRIMARY KEY
+);
+
+-- Initialise the schema version
+insert into meta (version) values (0);
+
 -- Used to store information about servers
 CREATE TABLE IF NOT EXISTS guilds (
   guild_id BIGINT PRIMARY KEY,

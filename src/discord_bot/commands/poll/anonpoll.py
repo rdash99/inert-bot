@@ -6,7 +6,7 @@ import re
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext import commands
 #from sql.polls import SqlClass
-from discord_bot.sqlHandler import (select, execute)
+from discord_bot.SqlHandler import (select, execute)
 
 log = logging.getLogger(__name__)
 
